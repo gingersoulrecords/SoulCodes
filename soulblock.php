@@ -1,8 +1,8 @@
 <?php 
 /*
-Plugin Name: SoulBlock
+Plugin Name: SoulStyles
 Plugin URI: http://gingersoulrecords.com
-Description: A set of shortcodes to control content layouts
+Description: A set of responsive shortcodes by Ginger Soul Records
 Version: 0.1.0
 Author: Dave Bloom
 Author URI:  http://gingersoulrecords.com
