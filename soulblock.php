@@ -13,12 +13,36 @@ class SoulBlock {
 	public static function init(){
 		add_action( 'wp_enqueue_scripts', array( 'SoulBlock', 'styles') );
 		add_shortcode( 'div', array( 'SoulBlock', 'shortcode' ) );
+		add_shortcode( 'div0', array( 'SoulBlock', 'shortcode' ) );
+		add_shortcode( 'div1', array( 'SoulBlock', 'shortcode' ) );
+		add_shortcode( 'div2', array( 'SoulBlock', 'shortcode' ) );
+		add_shortcode( 'div3', array( 'SoulBlock', 'shortcode' ) );
+		add_shortcode( 'div4', array( 'SoulBlock', 'shortcode' ) );
 		add_shortcode( 'div_nested', array( 'SoulBlock', 'shortcode' ) );
 		add_shortcode( 'div_nested2', array( 'SoulBlock', 'shortcode' ) );
 		add_shortcode( 'div_nested3', array( 'SoulBlock', 'shortcode' ) );
 		add_shortcode( 'div_nested4', array( 'SoulBlock', 'shortcode' ) );
 		add_shortcode( 'div_nested5', array( 'SoulBlock', 'shortcode' ) );
+
+		add_action( 'admin_head', array( 'SoulBlock', 'init_mce' ) );
 	}
+	public static function init_mce(){
+		$screen = get_current_screen();
+		if ( 'post' != $screen->base ) {
+			return true;
+		}
+		add_filter( 'mce_external_plugins', array( 'SoulBlock', 'mce_plugin' ) );
+		add_filter( 'mce_buttons', 			array( 'SoulBlock', 'mce_button' ) );
+	}
+	public static function mce_plugin( $plugin_array ) {
+		$plugin_array['soulstyles'] = plugins_url( 'soulblock-mce.js', __FILE__ );
+		return $plugin_array;
+	}
+	public static function mce_button( $buttons ) {
+		array_push( $buttons, 'soulstyles' );
+		return $buttons;
+	}
+
 	public static function styles(){
 		wp_register_style( 'soulblock', plugins_url( 'soulblock.css', __FILE__ ) );
 		wp_enqueue_style( 'soulblock' );
