@@ -10,7 +10,9 @@ Author URI:  http://gingersoulrecords.com
 
 add_action( 'plugins_loaded', array( 'SoulBlock', 'init') );
 class SoulBlock {
+	public static $plugin_path;
 	public static function init(){
+		self::$plugin_path = plugin_dir_path( __FILE__ );
 		add_action( 'wp_enqueue_scripts', array( 'SoulBlock', 'styles') );
 		add_shortcode( 'div', array( 'SoulBlock', 'shortcode' ) );
 		add_shortcode( 'div0', array( 'SoulBlock', 'shortcode' ) );
@@ -31,8 +33,9 @@ class SoulBlock {
 		if ( 'post' != $screen->base ) {
 			return true;
 		}
-		add_filter( 'mce_external_plugins', array( 'SoulBlock', 'mce_plugin' ) );
-		add_filter( 'mce_buttons', 			array( 'SoulBlock', 'mce_button' ) );
+		add_filter( 'mce_external_plugins', 	array( 'SoulBlock', 'mce_plugin' ) );
+		add_filter( 'mce_buttons', 				array( 'SoulBlock', 'mce_button' ) );
+		add_filter( 'mce_external_languages', 	array( 'SoulBlock', 'mce_l10n' ) );
 	}
 	public static function mce_plugin( $plugin_array ) {
 		$plugin_array['soulstyles'] = plugins_url( 'soulblock-mce.js', __FILE__ );
@@ -42,7 +45,10 @@ class SoulBlock {
 		array_push( $buttons, 'soulstyles' );
 		return $buttons;
 	}
-
+	public static function mce_l10n( $locales ) {
+		$locales['soulstyles'] = self::$plugin_path.'soulstyles-mcevars.php';
+		return $locales;
+	}
 	public static function styles(){
 		wp_register_style( 'soulblock', plugins_url( 'soulblock.css', __FILE__ ) );
 		wp_enqueue_style( 'soulblock' );
@@ -80,13 +86,15 @@ class SoulBlock {
 			}
 			foreach ( $sizes as $size ) {
 				$sized_attribute = "{$size}-{$attribute}";
-				$value = $args[$sized_attribute];
-				if ( 'z-index' == $sized_attribute ) {
-					$value = str_replace( '-', 'n', $value );
-				}
 				if ( isset( $args[$sized_attribute]) ) {
-					$class = self::_add_class( $class, "{$sized_attribute}-{$value}" );
-					unset( $args[$sized_attribute] );
+					$value = $args[$sized_attribute];
+					if ( 'z-index' == $sized_attribute ) {
+						$value = str_replace( '-', 'n', $value );
+					}
+					if ( isset( $args[$sized_attribute]) ) {
+						$class = self::_add_class( $class, "{$sized_attribute}-{$value}" );
+						unset( $args[$sized_attribute] );
+					}
 				}
 			}
 		}
