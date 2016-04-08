@@ -61,9 +61,9 @@ class SoulBlock {
 	}
 	public static function shortcode( $args=array(), $content="" ) {
 		$defaults = array(
-			'class' => false,
-			'float' => 'left',
-			'padding' => 1,
+			'class' => false
+// 			'float' => 'left',
+// 			'padding' => 1,
 		);
 		$args = wp_parse_args( $args, $defaults );
 
